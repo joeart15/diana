@@ -217,28 +217,9 @@
       box-shadow: 0 8px 40px rgba(180,80,255,0.25);
       image-rendering: pixelated;
       max-width: 100%;
-      cursor: pointer;
       display: block;
       margin: 0 auto;
     }
-    .game-btns {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 14px;
-    }
-    .game-btns button {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(220,160,255,0.35);
-      border-radius: 12px;
-      color: #e0aaff;
-      font-size: 1.5rem;
-      width: 54px; height: 54px;
-      cursor: pointer;
-      transition: background 0.2s;
-      user-select: none;
-    }
-    .game-btns button:active { background: rgba(180,80,255,0.25); }
 
     /* ── Footer ── */
     footer {
@@ -260,21 +241,19 @@
     <p class="label">just for you 🤍</p>
     <h1>Hey, <span>Diana Munoz</span> 🌙</h1>
     <p class="oneliner">
-      "There is no one — not a single soul on this earth — who is exactly like you. You are a 1 of 1, and I mean that with everything in me."
+      "I don't know everything about you yet — but what I do know already has me thinking you're something pretty special."
     </p>
-    <p class="from">— always, Josue Arteaga 🤍</p>
+    <p class="from">— Josue Arteaga 🤍</p>
   </div>
 
-  <!-- Forgiveness -->
+  <!-- Getting to know you -->
   <div class="forgive-section">
-    <h2>🕊️ I just want you to know…</h2>
+    <h2>✨ Real talk…</h2>
     <p>
-      I know things haven't been perfect between us, and I'm not here to pretend otherwise.
-      But I am here to say — genuinely, from the heart — that I'm sorry for anything that
-      ever made you feel less than the incredible person you are. You deserve softness.
-      You deserve patience. You deserve someone who shows up for you. I want to be that.
-      Whatever you're willing to give, I'll meet you there. No pressure, no rush —
-      just me, being honest with you.
+      I'm not here to come on too strong — I just think you're genuinely cool and
+      I wanted you to know that. You've got a vibe that's hard to find, and I'm
+      glad I get to talk to you. No pressure, no expectations — just me letting
+      you know you caught my attention for all the right reasons. 😊
     </p>
   </div>
 
@@ -298,44 +277,40 @@
     <div class="card">
       <div class="emoji">🙏</div>
       <h3>She walks with God</h3>
-      <p>A woman with faith is rare and beautiful. The fact that you're grounded in God says everything about your character.</p>
+      <p>A woman with faith just hits different. That kind of grounding is genuinely attractive.</p>
     </div>
     <div class="card">
       <div class="emoji">😂</div>
-      <h3>Naturally funny</h3>
-      <p>Your humor is effortless — you make me laugh without even trying and that's honestly one of the most attractive things about you.</p>
+      <h3>She's funny</h3>
+      <p>Like actually funny — not "haha" funny. The kind where you can't help but smile for real.</p>
     </div>
     <div class="card">
       <div class="emoji">💪</div>
-      <h3>Hard working</h3>
-      <p>You don't wait for things to happen — you go get them. That drive and work ethic? Incredibly attractive and inspiring.</p>
+      <h3>She works hard</h3>
+      <p>Her drive speaks for itself. There's something about a woman who's about her goals.</p>
     </div>
     <div class="card">
       <div class="emoji">✨</div>
-      <h3>Genuinely beautiful</h3>
-      <p>Inside and out. The kind of beautiful that doesn't need a filter — it just is. You're stunning, Diana, and I hope you know that.</p>
+      <h3>She's beautiful</h3>
+      <p>Inside and out. The kind you notice immediately — and keep noticing the more you talk.</p>
     </div>
     <div class="card">
       <div class="emoji">🎯</div>
-      <h3>Ambitious</h3>
-      <p>You have goals, a vision, a direction — and nothing is more attractive than a woman who knows where she's going.</p>
+      <h3>She's ambitious</h3>
+      <p>She knows what she wants out of life. That confidence and direction? Very attractive.</p>
     </div>
     <div class="card">
       <div class="emoji">🌹</div>
-      <h3>She loves her flowers</h3>
-      <p>A girl who knows she deserves the princess treatment — and she does. Roses, soft moments, being cherished. You deserve all of it.</p>
+      <h3>She loves flowers</h3>
+      <p>A girl who appreciates the princess treatment — noted. Challenge accepted. 😏</p>
     </div>
   </div>
 
-  <!-- Pixel game -->
+  <!-- Pixel animation -->
   <div class="game-section">
-    <h2>🕹️ A little something for you</h2>
-    <p class="game-hint">Arrow keys or buttons below — walk up and give her the roses 🌹</p>
-    <canvas id="gameCanvas" width="480" height="260"></canvas>
-    <div class="game-btns">
-      <button id="btnLeft">◀</button>
-      <button id="btnRight">▶</button>
-    </div>
+    <h2>🎬 A little scene for you</h2>
+    <p class="game-hint">watch closely 🌹</p>
+    <canvas id="gameCanvas" width="480" height="200"></canvas>
   </div>
 
   <footer>made with 🤍 by Josue, just for Diana — you're a 1 of 1</footer>
@@ -371,272 +346,180 @@
   draw();
 </script>
 
-<!-- Pixel rose game -->
+<!-- Pixel animation -->
 <script>
-(function() {
+(function () {
   const gc = document.getElementById('gameCanvas');
   const gx = gc.getContext('2d');
-  const S = 3; // pixel scale
+  const S = 3; // each game unit = 3 canvas px
+  // game space: 160 x 66 units  (480/3 x 200/3)
 
-  // ── palette ──
+  const groundY = 52;   // ground line in game units  (52*3=156px, plenty of room)
+  const girlX   = 118;  // girl x in game units       (118*3=354px, within 480)
+
   const C = {
-    sky:    '#1a0a2e',
-    ground: '#3b1f5e',
-    grass:  '#4a2870',
-    skin:   '#f5c5a0',
-    skinD:  '#c8855a',  // diana darker mexican tone
-    hair:   '#1a0a00',
-    hairD:  '#0d0500',
-    shirt:  '#7c3aed',
-    pants:  '#2d1045',
-    dress:  '#ff69b4',
-    rose:   '#ff2d78',
-    stem:   '#22c55e',
-    white:  '#ffffff',
-    heartR: '#ff2d78',
-    moonY:  '#fde68a',
-    star:   '#fde68a',
-    flag1:  '#006847', // mexico green
-    flag2:  '#ffffff',
-    flag3:  '#ce1126', // mexico red
+    sky:'#1a0a2e', ground:'#3b1f5e', grass:'#4a2870',
+    skin:'#f5c5a0', skinD:'#c8855a',
+    hair:'#1a0500', hairD:'#0d0300',
+    shirt:'#7c3aed', pants:'#2d1045',
+    dress:'#ff69b4', rose:'#ff2d78', stem:'#22c55e',
+    heartR:'#ff2d78', moon:'#fde68a', star:'#fde68a',
+    f1:'#006847', f2:'#ffffff', f3:'#ce1126',
   };
 
-  // ── state ──
-  let bx = 40, step = 0, done = false, heartAnim = 0;
-  const girlX = 340;
-  const groundY = 200;
-  const keys = { left: false, right: false };
-
-  // button controls
-  document.getElementById('btnLeft').addEventListener('mousedown',  () => keys.left  = true);
-  document.getElementById('btnLeft').addEventListener('mouseup',    () => keys.left  = false);
-  document.getElementById('btnLeft').addEventListener('touchstart', (e) => { e.preventDefault(); keys.left  = true; });
-  document.getElementById('btnLeft').addEventListener('touchend',   (e) => { e.preventDefault(); keys.left  = false; });
-  document.getElementById('btnRight').addEventListener('mousedown',  () => keys.right = true);
-  document.getElementById('btnRight').addEventListener('mouseup',    () => keys.right = false);
-  document.getElementById('btnRight').addEventListener('touchstart', (e) => { e.preventDefault(); keys.right = true; });
-  document.getElementById('btnRight').addEventListener('touchend',   (e) => { e.preventDefault(); keys.right = false; });
-
-  window.addEventListener('keydown', e => {
-    if (e.key === 'ArrowLeft')  keys.left  = true;
-    if (e.key === 'ArrowRight') keys.right = true;
-  });
-  window.addEventListener('keyup', e => {
-    if (e.key === 'ArrowLeft')  keys.left  = false;
-    if (e.key === 'ArrowRight') keys.right = false;
-  });
-
-  function px(x, y, w, h, color) {
-    gx.fillStyle = color;
-    gx.fillRect(x * S, y * S, w * S, h * S);
+  function px(x, y, w, h, col) {
+    gx.fillStyle = col;
+    gx.fillRect(x*S, y*S, w*S, h*S);
   }
 
   function drawBg() {
-    // sky
-    gx.fillStyle = C.sky;
-    gx.fillRect(0, 0, gc.width, gc.height);
-
+    gx.fillStyle = C.sky; gx.fillRect(0,0,gc.width,gc.height);
     // moon
-    px(120, 8, 6, 6, C.moonY);
-    px(121, 7, 4, 1, C.moonY);
-    px(121, 15, 4, 1, C.moonY);
-
+    px(22,4,5,5,C.moon); px(23,3,3,1,C.moon); px(23,9,3,1,C.moon);
     // stars
-    [[20,12],[55,6],[85,18],[150,9],[170,5],[30,25],[65,22]].forEach(([sx,sy])=>{
-      px(sx, sy, 1, 1, C.star);
-      px(sx+1, sy-1, 1, 1, C.star);
+    [[8,3],[38,5],[55,2],[72,7],[95,3],[108,6],[125,2],[10,12],[45,11]].forEach(([sx,sy])=>{
+      px(sx,sy,1,1,C.star); px(sx+1,sy-1,1,1,C.star);
     });
-
-    // Mexican flag tiny on top right
-    px(136, 6, 3, 7, C.flag1);
-    px(139, 6, 3, 7, C.flag2);
-    px(142, 6, 3, 7, C.flag3);
-    // flag pole
-    px(135, 4, 1, 10, '#888');
-
+    // tiny mexico flag
+    px(148,2,2,6,C.f1); px(150,2,2,6,C.f2); px(152,2,2,6,C.f3);
+    px(147,1,1,8,'#888');
     // ground
-    gx.fillStyle = C.ground;
-    gx.fillRect(0, groundY * S, gc.width, gc.height - groundY * S);
-    // grass strip
-    gx.fillStyle = C.grass;
-    gx.fillRect(0, groundY * S, gc.width, 2 * S);
-
+    gx.fillStyle = C.ground; gx.fillRect(0,groundY*S,gc.width,gc.height-groundY*S);
+    gx.fillStyle = C.grass;  gx.fillRect(0,groundY*S,gc.width,2*S);
     // path dots
-    for (let i = 0; i < 14; i++) {
-      px(20 + i * 12, groundY + 3, 4, 1, '#6b3fa0');
-    }
+    for(let i=0;i<13;i++) px(6+i*11, groundY+3, 4,1,'#6b3fa0');
   }
 
-  // draw pixel roses bouquet (carried / offered)
-  function drawRoses(rx, ry, offered) {
-    // stems
-    px(rx+1, ry+4, 1, 5, C.stem);
-    px(rx+3, ry+3, 1, 6, C.stem);
-    px(rx+5, ry+4, 1, 5, C.stem);
-    // blooms
-    [[rx, ry+2],[rx+2, ry+1],[rx+4, ry+2]].forEach(([fx,fy]) => {
-      px(fx+1, fy,   2, 1, C.rose);
-      px(fx,   fy+1, 4, 2, C.rose);
-      px(fx+1, fy+3, 2, 1, C.rose);
+  function drawRoses(rx, ry) {
+    px(rx+1,ry+4,1,4,C.stem); px(rx+3,ry+3,1,5,C.stem); px(rx+5,ry+4,1,4,C.stem);
+    [[rx,ry+2],[rx+2,ry+1],[rx+4,ry+2]].forEach(([fx,fy])=>{
+      px(fx,fy,3,1,C.rose); px(fx,fy+1,3,2,C.rose); px(fx+1,fy+3,1,1,C.rose);
     });
-    // leaves
-    px(rx+2, ry+6, 2, 1, C.stem);
-    px(rx+4, ry+7, 2, 1, C.stem);
-    if (offered) {
-      // wrap ribbon
-      px(rx+1, ry+9, 5, 1, '#fff');
-    }
+    px(rx+2,ry+6,2,1,C.stem); px(rx+4,ry+7,2,1,C.stem);
   }
 
-  // draw boy (Josue) — faces right always toward girl
-  function drawBoy(bxp, walking) {
-    const x = bxp, y = groundY - 22;
-    const legOff = walking ? Math.floor(step / 5) % 2 : 0;
-    // shoes
-    px(x+1, y+20, 4, 2, '#111');
-    px(x+7, y+20, 4, 2, '#111');
-    // pants
-    px(x+1, y+14, 3, 7, C.pants);
-    px(x+7, y+14+(legOff?1:0), 3, 7, C.pants);
-    // shirt
-    px(x+1, y+7, 10, 8, C.shirt);
-    // arm holding roses (left side toward girl)
-    px(x+9, y+9, 2, 6, C.skin);
-    drawRoses(x+10, y+3, false);
-    // other arm
-    px(x+0, y+9, 2, 6, C.skin);
-    // neck
-    px(x+4, y+5, 4, 3, C.skin);
-    // head
-    px(x+2, y+1, 8, 6, C.skin);
-    // hair
-    px(x+2, y+1, 8, 2, C.hair);
-    px(x+2, y+3, 1, 2, C.hair);
-    // eyes
-    px(x+4, y+4, 1, 1, '#111');
-    px(x+7, y+4, 1, 1, '#111');
-    // smile
-    px(x+4, y+6, 1, 1, '#c8855a');
-    px(x+5, y+7, 2, 1, '#c8855a');
-    px(x+7, y+6, 1, 1, '#c8855a');
-  }
-
-  // draw girl (Diana) — mexican, dark hair, pink dress, waiting with arms slightly out
-  function drawGirl(gxp, happy) {
-    const x = gxp, y = groundY - 24;
-    // shoes (heels)
-    px(x+1, y+22, 3, 2, '#9d174d');
-    px(x+7, y+22, 3, 2, '#9d174d');
-    px(x+3, y+23, 1, 1, '#9d174d');
-    px(x+9, y+23, 1, 1, '#9d174d');
-    // dress skirt
-    px(x,   y+14, 12, 9, C.dress);
-    px(x-1, y+17, 14, 6, C.dress);
-    // dress bodice
-    px(x+2, y+8,  8, 7, C.dress);
-    // arms out (waiting / receiving)
-    px(x-1, y+9, 2, 5, C.skinD);
-    px(x+11,y+9, 2, 5, C.skinD);
-    if (happy) {
-      // holding roses
-      drawRoses(x-4, y+4, true);
-    }
-    // neck
-    px(x+4, y+5, 4, 4, C.skinD);
-    // head
-    px(x+2, y+0, 8, 6, C.skinD);
-    // long dark hair
-    px(x+2, y+0, 8, 2, C.hairD);
-    px(x+1, y+2, 2, 8, C.hairD);
-    px(x+9, y+2, 2, 8, C.hairD);
-    px(x+2, y+6, 1, 4, C.hairD);
-    px(x+9, y+6, 1, 4, C.hairD);
-    // eyes
-    const eyeColor = happy ? '#ff69b4' : '#111';
-    px(x+4, y+3, 1, 1, '#111');
-    px(x+7, y+3, 1, 1, '#111');
-    // lashes
-    px(x+3, y+2, 1, 1, '#111');
-    px(x+8, y+2, 1, 1, '#111');
-    // smile
-    if (happy) {
-      px(x+4, y+5, 4, 1, '#9d174d');
-      px(x+3, y+4, 1, 1, '#9d174d');
-      px(x+8, y+4, 1, 1, '#9d174d');
+  function drawBoy(bx, phase, f) {
+    const x = Math.round(bx), y = groundY - 19;
+    const swing = (phase==='walk') ? Math.floor(f/6)%2 : 0;
+    px(x+1,y+17,3,2,'#111'); px(x+6,y+17,3,2,'#111');
+    px(x+2,y+12,2,5+(swing?1:0),C.pants);
+    px(x+6,y+12,2,5+(swing?0:1),C.pants);
+    px(x+1,y+7,8,5,C.shirt);
+    if(phase==='kiss'){
+      // both arms around her
+      px(x+7,y+7,4,2,C.skin);
+      px(x+0,y+8,2,4,C.skin);
+    } else if(phase==='offer'||phase==='heart'){
+      // right arm raised holding roses
+      px(x+7,y+5,2,5,C.skin);
+      drawRoses(x+8,y-1);
+      px(x+0,y+8,2,4,C.skin);
     } else {
-      px(x+4, y+5, 4, 1, '#9d174d');
+      px(x+0,y+8,2,4,C.skin);
+      px(x+7,y+8,2,4,C.skin);
+    }
+    px(x+3,y+4,3,3,C.skin);
+    px(x+2,y+0,7,5,C.skin);
+    px(x+2,y+0,7,2,C.hair);
+    px(x+3,y+3,1,1,'#111'); px(x+6,y+3,1,1,'#111');
+    const smileY = (phase==='kiss'||phase==='heart') ? y+4 : y+5;
+    px(x+3,smileY,1,1,C.skin); px(x+4,smileY+1,3,1,'#b06040'); px(x+7,smileY,1,1,C.skin);
+  }
+
+  function drawGirl(phase) {
+    const x = girlX, y = groundY - 21;
+    const happy = phase==='offer'||phase==='kiss'||phase==='heart';
+    px(x+1,y+19,2,2,'#9d174d'); px(x+7,y+19,2,2,'#9d174d');
+    px(x,y+13,10,7,C.dress); px(x-1,y+16,12,5,C.dress);
+    px(x+2,y+7,7,6,C.dress);
+    if(phase==='kiss'){
+      px(x-1,y+8,2,4,C.skinD); px(x+9,y+8,2,4,C.skinD);
+    } else if(phase==='heart'){
+      // arms up holding roses (received)
+      px(x-4,y+7,4,2,C.skinD);
+      drawRoses(x-7,y+1);
+      px(x+9,y+8,2,4,C.skinD);
+    } else {
+      px(x+0,y+8,2,4,C.skinD); px(x+8,y+8,2,4,C.skinD);
+    }
+    px(x+3,y+5,4,3,C.skinD);
+    px(x+2,y+0,8,6,C.skinD);
+    px(x+2,y+0,8,2,C.hairD);
+    px(x+1,y+2,2,9,C.hairD); px(x+9,y+2,2,9,C.hairD);
+    px(x+4,y+3,1,1,'#111'); px(x+7,y+3,1,1,'#111');
+    px(x+3,y+2,1,1,'#111'); px(x+8,y+2,1,1,'#111');
+    if(happy){
+      px(x+4,y+4,1,1,'#9d174d'); px(x+5,y+5,2,1,'#9d174d'); px(x+7,y+4,1,1,'#9d174d');
+    } else {
+      px(x+4,y+5,3,1,'#9d174d');
     }
   }
 
-  // hearts burst on meeting
-  let hearts = [];
-  function spawnHearts(hx, hy) {
-    for (let i = 0; i < 10; i++) {
-      hearts.push({
-        x: hx + Math.random()*30 - 15,
-        y: hy,
-        vx: (Math.random()-0.5)*1.5,
-        vy: -(0.5 + Math.random()*1.5),
-        life: 80,
-        size: 2 + Math.floor(Math.random()*2),
-      });
-    }
-  }
-
-  function drawHeart(hx, hy, sz) {
-    gx.fillStyle = C.heartR;
-    // pixel heart shape scaled by sz
-    const p = (dx, dy) => px(hx + dx*sz, hy + dy*sz, sz, sz, C.heartR);
-    p(1,0); p(2,0); p(4,0); p(5,0);
-    p(0,1); p(1,1); p(2,1); p(3,1); p(4,1); p(5,1); p(6,1);
-    p(0,2); p(1,2); p(2,2); p(3,2); p(4,2); p(5,2); p(6,2);
-    p(1,3); p(2,3); p(3,3); p(4,3); p(5,3);
-    p(2,4); p(3,4); p(4,4);
+  function drawBigHeart(cx, cy, sz, alpha) {
+    gx.globalAlpha = Math.max(0, alpha);
+    const p = (dx,dy) => { gx.fillStyle=C.heartR; gx.fillRect(cx+dx*sz,cy+dy*sz,sz,sz); };
+    p(1,0);p(2,0);p(4,0);p(5,0);
+    p(0,1);p(1,1);p(2,1);p(3,1);p(4,1);p(5,1);p(6,1);
+    p(0,2);p(1,2);p(2,2);p(3,2);p(4,2);p(5,2);p(6,2);
+    p(1,3);p(2,3);p(3,3);p(4,3);p(5,3);
+    p(2,4);p(3,4);p(4,4);
     p(3,5);
+    gx.globalAlpha = 1;
   }
 
-  let heartsSpawned = false;
-  function loop() {
-    // move
-    if (!done) {
-      if (keys.right && bx < girlX - 22) { bx += 1.5; step++; }
-      if (keys.left  && bx > 10)         { bx -= 1.5; step++; }
-
-      if (bx >= girlX - 22 && !heartsSpawned) {
-        done = true;
-        heartsSpawned = true;
-        spawnHearts((girlX + 5) * S, (groundY - 20) * S);
-      }
-    }
-
-    gx.clearRect(0, 0, gc.width, gc.height);
-    drawBg();
-    drawGirl(girlX, done);
-    drawBoy(Math.round(bx), !done && (keys.left || keys.right));
-
-    // update & draw hearts
-    hearts.forEach(h => {
-      h.x += h.vx * S;
-      h.y += h.vy * S;
-      h.life--;
-      gx.globalAlpha = Math.max(0, h.life / 80);
-      drawHeart(Math.round(h.x / S), Math.round(h.y / S), h.size);
-      gx.globalAlpha = 1;
+  // small kiss-pop hearts
+  let mini = [];
+  function spawnMini() {
+    for(let i=0;i<10;i++) mini.push({
+      x:(girlX+4)*S, y:(groundY-18)*S,
+      vx:(Math.random()-0.5)*2.5, vy:-(0.5+Math.random()*2),
+      life:55,
     });
-    hearts = hearts.filter(h => h.life > 0);
+  }
 
-    if (done && hearts.length === 0) {
-      // show message
-      gx.fillStyle = 'rgba(180,80,255,0.18)';
-      gx.beginPath();
-      gx.roundRect(gc.width/2 - 115, gc.height/2 - 22, 230, 44, 12);
-      gx.fill();
-      gx.fillStyle = '#f0d6ff';
-      gx.font = 'bold 13px monospace';
-      gx.textAlign = 'center';
-      gx.fillText('🌹 These are for you, Diana 🌹', gc.width/2, gc.height/2 + 6);
+  // phases (frames):
+  //  0–95  walk
+  //  95–160 offer roses
+  //  160–215 kiss
+  //  215–375 big heart rises
+  //  375–420 pause → loop
+
+  let frame=0, boyX=5, miniSpawned=false;
+  const walkTarget = girlX - 15;
+
+  function loop() {
+    const phase = frame<95 ?'walk': frame<160?'offer': frame<215?'kiss': frame<375?'heart':'done';
+
+    if(phase==='walk')  boyX = 5 + (walkTarget-5)*(frame/95);
+    if(phase==='kiss' && !miniSpawned){ miniSpawned=true; spawnMini(); }
+    if(phase==='done'){ frame=0; boyX=5; miniSpawned=false; mini=[]; }
+
+    gx.clearRect(0,0,gc.width,gc.height);
+    drawBg();
+    drawGirl(phase);
+    drawBoy(boyX, phase, frame);
+
+    // mini hearts
+    mini.forEach(h=>{
+      h.x+=h.vx; h.y+=h.vy; h.life--;
+      gx.globalAlpha=Math.max(0,h.life/55);
+      gx.font='9px serif'; gx.fillText('🩷',h.x,h.y);
+      gx.globalAlpha=1;
+    });
+    mini=mini.filter(h=>h.life>0);
+
+    // big rising heart
+    if(phase==='heart'){
+      const t=frame-215;
+      const sz = Math.min(6, Math.floor(t/5)+1);
+      const rise = t*0.45;
+      const alpha = t<110 ? 1 : 1-(t-110)/55;
+      const hx = (girlX+1)*S - sz*3;
+      const hy = (groundY-24)*S - rise;
+      drawBigHeart(hx, hy, sz, alpha);
     }
 
+    frame++;
     requestAnimationFrame(loop);
   }
   loop();
