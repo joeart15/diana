@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>For Diana 💗</title>
+  <title>For Diana 🤍</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       min-height: 100vh;
-      background: linear-gradient(135deg, #ffe0ec 0%, #ffd6e7 40%, #fce4f3 100%);
+      background: linear-gradient(160deg, #1a0a2e 0%, #2d1045 40%, #1a0a2e 100%);
       font-family: 'Lato', sans-serif;
       overflow-x: hidden;
-      color: #7a3b5e;
+      color: #f0d6ff;
     }
 
     /* ── Falling hearts & sparkles canvas ── */
@@ -40,15 +40,15 @@
 
     /* ── Hero card ── */
     .hero {
-      background: rgba(255,255,255,0.55);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,182,209,0.6);
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(220,160,255,0.25);
       border-radius: 30px;
       padding: 50px 45px;
       max-width: 680px;
       width: 100%;
       text-align: center;
-      box-shadow: 0 8px 40px rgba(220,80,130,0.15);
+      box-shadow: 0 8px 40px rgba(180,80,255,0.15);
       animation: floatIn 1.1s cubic-bezier(.22,1,.36,1) both;
     }
 
@@ -61,7 +61,7 @@
       font-size: 0.78rem;
       letter-spacing: 4px;
       text-transform: uppercase;
-      color: #e07aa0;
+      color: #d4a0ff;
       margin-bottom: 14px;
     }
 
@@ -69,18 +69,18 @@
       font-family: 'Playfair Display', serif;
       font-size: clamp(2.2rem, 6vw, 3.4rem);
       line-height: 1.15;
-      color: #c2185b;
+      color: #f0d6ff;
       margin-bottom: 24px;
     }
 
-    .hero h1 span { font-style: italic; }
+    .hero h1 span { font-style: italic; color: #e0aaff; }
 
     .hero .oneliner {
       font-family: 'Playfair Display', serif;
       font-style: italic;
       font-size: clamp(1.05rem, 2.8vw, 1.3rem);
       line-height: 1.7;
-      color: #9c4070;
+      color: #d4b8f0;
       margin-bottom: 28px;
       padding: 0 10px;
     }
@@ -88,16 +88,68 @@
     .hero .from {
       font-size: 0.88rem;
       letter-spacing: 2px;
-      color: #e07aa0;
+      color: #d4a0ff;
+    }
+
+    /* ── Forgiveness section ── */
+    .forgive-section {
+      max-width: 680px;
+      width: 100%;
+      text-align: center;
+      animation: floatIn 1.1s 0.15s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    .forgive-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: #e0aaff;
+      margin-bottom: 18px;
+    }
+
+    .forgive-section p {
+      font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+      line-height: 1.85;
+      color: #c9b3e0;
+    }
+
+    /* ── Video wrapper ── */
+    .video-wrap {
+      max-width: 720px;
+      width: 100%;
+      animation: floatIn 1.1s 0.25s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    .video-wrap h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      color: #e0aaff;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .video-frame {
+      position: relative;
+      padding-bottom: 56.25%;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(180,80,255,0.3);
+      border: 1px solid rgba(220,160,255,0.2);
+    }
+
+    .video-frame iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
     }
 
     /* ── Reason cards ── */
     .reasons-title {
       font-family: 'Playfair Display', serif;
       font-size: clamp(1.4rem, 4vw, 2rem);
-      color: #c2185b;
+      color: #e0aaff;
       text-align: center;
-      animation: floatIn 1.1s 0.2s cubic-bezier(.22,1,.36,1) both;
+      animation: floatIn 1.1s 0.35s cubic-bezier(.22,1,.36,1) both;
     }
 
     .cards {
@@ -106,23 +158,23 @@
       gap: 20px;
       max-width: 780px;
       width: 100%;
-      animation: floatIn 1.1s 0.35s cubic-bezier(.22,1,.36,1) both;
+      animation: floatIn 1.1s 0.45s cubic-bezier(.22,1,.36,1) both;
     }
 
     .card {
-      background: rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.06);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,182,209,0.5);
+      border: 1px solid rgba(220,160,255,0.2);
       border-radius: 22px;
       padding: 28px 22px;
       text-align: center;
       transition: transform 0.25s, box-shadow 0.25s;
-      box-shadow: 0 4px 20px rgba(220,80,130,0.1);
+      box-shadow: 0 4px 20px rgba(180,80,255,0.1);
     }
 
     .card:hover {
       transform: translateY(-6px);
-      box-shadow: 0 12px 30px rgba(220,80,130,0.2);
+      box-shadow: 0 12px 30px rgba(180,80,255,0.25);
     }
 
     .card .emoji { font-size: 2.2rem; margin-bottom: 12px; }
@@ -130,22 +182,22 @@
     .card h3 {
       font-family: 'Playfair Display', serif;
       font-size: 1.05rem;
-      color: #c2185b;
+      color: #e0aaff;
       margin-bottom: 8px;
     }
 
     .card p {
       font-size: 0.9rem;
       line-height: 1.6;
-      color: #9c4070;
+      color: #c9b3e0;
     }
 
     /* ── Footer ── */
     footer {
       font-size: 0.8rem;
-      color: #e07aa0;
+      color: #d4a0ff;
       letter-spacing: 1.5px;
-      animation: floatIn 1.1s 0.5s cubic-bezier(.22,1,.36,1) both;
+      animation: floatIn 1.1s 0.6s cubic-bezier(.22,1,.36,1) both;
     }
   </style>
 </head>
@@ -157,16 +209,42 @@
 
   <!-- Hero -->
   <div class="hero">
-    <p class="label">just for you 💗</p>
-    <h1>Hey, <span>Diana Munoz</span> 🌸</h1>
+    <p class="label">just for you 🤍</p>
+    <h1>Hey, <span>Diana Munoz</span> 🌙</h1>
     <p class="oneliner">
-      "In a world full of ordinary moments, you somehow make every single one feel like something worth remembering."
+      "There is no one — not a single soul on this earth — who is exactly like you. You are a 1 of 1, and I mean that with everything in me."
     </p>
-    <p class="from">— with love, Josue Arteaga 🤍</p>
+    <p class="from">— always, Josue Arteaga 🤍</p>
+  </div>
+
+  <!-- Forgiveness -->
+  <div class="forgive-section">
+    <h2>🕊️ I just want you to know…</h2>
+    <p>
+      I know things haven't been perfect between us, and I'm not here to pretend otherwise.
+      But I am here to say — genuinely, from the heart — that I'm sorry for anything that
+      ever made you feel less than the incredible person you are. You deserve softness.
+      You deserve patience. You deserve someone who shows up for you. I want to be that.
+      Whatever you're willing to give, I'll meet you there. No pressure, no rush —
+      just me, being honest with you.
+    </p>
+  </div>
+
+  <!-- Video -->
+  <div class="video-wrap">
+    <h2>🎵 I heard this and thought of you</h2>
+    <div class="video-frame">
+      <iframe
+        src="https://www.youtube.com/embed/Ne88lZm13e0?rel=0"
+        title="A song for Diana"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
   </div>
 
   <!-- Reason section -->
-  <h2 class="reasons-title">A few reasons you're so special ✨</h2>
+  <h2 class="reasons-title">Why you're a 1 of 1 ✨</h2>
 
   <div class="cards">
     <div class="card">
@@ -201,7 +279,7 @@
     </div>
   </div>
 
-  <footer>made with 💗 by Josue, just for Diana</footer>
+  <footer>made with 🤍 by Josue, just for Diana — you're a 1 of 1</footer>
 </div>
 
 <!-- Falling hearts & sparkles -->
@@ -218,7 +296,7 @@
   resize();
   window.addEventListener('resize', resize);
 
-  const symbols = ['💗','💖','✨','💕','🌸','⭐','💫','🩷'];
+  const symbols = ['🤍','💜','✨','🕊️','🌙','⭐','💫','🪷'];
 
   function spawn() {
     return {
