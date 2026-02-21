@@ -330,7 +330,7 @@
   <div class="game-section">
     <h2>🎬 a lil something for you</h2>
     <p class="game-hint">watch closely 🌹</p>
-    <canvas id="gameCanvas" width="480" height="220"></canvas>
+    <canvas id="gameCanvas" width="520" height="260"></canvas>
   </div>
 
   <footer>made with 🌹 by Josue, just for Diana. you're a 1 of 1.</footer>
@@ -372,8 +372,408 @@
 (function () {
   const gc = document.getElementById('gameCanvas');
   const gx = gc.getContext('2d');
-  const S = 4; // 4px per game unit → crisper, bigger characters
-  // canvas 480x220 → game space 120 x 55
+  const S = 4; // canvas 520x260 → game space 130x65
+
+  const groundY = 54;  // 54*4=216px
+  const girlX   = 98;  // 98*4=392px
+
+  // ── Palette ──────────────────────────────────────────────
+  const C = {
+    // light light brown skin (both chars)
+    sk0:'#fce8cc', sk1:'#e8c898', sk2:'#d4a468', sk3:'#b07830', sk4:'#8a5a18',
+    // dark hair
+    hB:'#160500', hM:'#2e0e00', hH:'#4a1a00',
+    // boy shirt (purple)
+    sB:'#5b21b6', sL:'#7c3aed', sDk:'#3b0764', sHL:'#a78bfa',
+    // boy pants
+    pB:'#1e1b4b', pL:'#312e81', pDk:'#0f0c29',
+    shoe:'#18181b', lace:'#e5e7eb', sole:'#374151',
+    // girl dress (pink)
+    dB:'#ec4899', dL:'#fda4cf', dDk:'#9d174d', dHL:'#fce7f3',
+    // lips
+    lip:'#be185d', lipH:'#f472b6',
+    // eyes
+    eyeW:'#f8fafc', iris:'#1d4ed8', pupil:'#0a0a0a',
+    // rose bouquet
+    rB:'#f43f5e', rL:'#fb7185', rDk:'#be123c',
+    stm:'#16a34a', stmDk:'#14532d',
+    // scene
+    sky:'#0f0520', skyM:'#1a0a35',
+    gnd:'#2a1248', gnd2:'#3b1f5e',
+    gr1:'#3d2260', gr2:'#5a3490',
+    moon:'#fef3c7', moonSh:'#fde68a', star:'#fef9c3',
+    f1:'#006847', f2:'#ffffff', f3:'#ce1126',
+    path:'#4a1d7a', pathB:'#5b2d8a',
+    heartR:'#f43f5e', heartP:'#fb7185',
+  };
+
+  function px(x,y,w,h,c){ gx.fillStyle=c; gx.fillRect(x*S,y*S,w*S,h*S); }
+
+  // ── Bouquet ──────────────────────────────────────────────
+  function drawBouquet(rx, ry) {
+    // wrap
+    px(rx+2,ry+9,8,6,C.dHL); px(rx+3,ry+14,6,1,C.dB);
+    // stems
+    px(rx+3,ry+6,1,5,C.stm);  px(rx+3,ry+6,1,1,C.stmDk);
+    px(rx+6,ry+5,1,6,C.stm);
+    px(rx+9,ry+6,1,5,C.stm);
+    // leaves
+    px(rx+2,ry+8,2,1,C.stm);  px(rx+8,ry+9,2,1,C.stm);
+    // rose 1
+    px(rx+1,ry+3,4,3,C.rDk);  px(rx+2,ry+2,2,1,C.rB);
+    px(rx+1,ry+3,4,3,C.rB);   px(rx+2,ry+2,2,3,C.rL);  px(rx+3,ry+1,1,2,C.rL);
+    // rose 2 (taller)
+    px(rx+5,ry+1,4,3,C.rDk);  px(rx+6,ry+0,2,1,C.rB);
+    px(rx+5,ry+1,4,3,C.rB);   px(rx+6,ry+0,2,3,C.rL);  px(rx+7,ry-1,1,2,C.rL);
+    // rose 3
+    px(rx+8,ry+3,4,3,C.rDk);  px(rx+9,ry+2,2,1,C.rB);
+    px(rx+8,ry+3,4,3,C.rB);   px(rx+9,ry+2,2,3,C.rL);  px(rx+10,ry+1,1,2,C.rL);
+  }
+
+  // ── Background ───────────────────────────────────────────
+  function drawBg() {
+    for(let r=0;r<groundY;r++){
+      gx.fillStyle=r<groundY*0.45?C.sky:C.skyM;
+      gx.fillRect(0,r*S,gc.width,S);
+    }
+    // moon glow
+    gx.shadowColor='#fef3c7'; gx.shadowBlur=14*S;
+    px(18,4,8,8,C.moon);
+    px(19,3,6,1,C.moon); px(19,12,6,1,C.moon);
+    px(17,6,1,4,C.moon); px(26,6,1,4,C.moon);
+    px(20,6,2,2,C.moonSh);
+    gx.shadowBlur=0;
+    // stars
+    [[4,2],[22,5],[38,1],[52,7],[66,3],[78,6],[90,2],[102,7],[112,4],[8,12],[30,10],[60,11],[88,9],[118,3]].forEach(([sx,sy])=>{
+      px(sx,sy,1,1,C.star);
+    });
+    // flag
+    px(120,2,2,6,C.f1); px(122,2,2,6,C.f2); px(124,2,2,6,C.f3); px(119,1,1,8,'#555');
+    // ground
+    gx.fillStyle=C.gnd2; gx.fillRect(0,groundY*S,gc.width,gc.height-groundY*S);
+    gx.fillStyle=C.gnd;  gx.fillRect(0,(groundY+3)*S,gc.width,gc.height-(groundY+3)*S);
+    gx.fillStyle=C.gr1;  gx.fillRect(0,groundY*S,gc.width,2*S);
+    gx.fillStyle=C.gr2;  gx.fillRect(0,(groundY+1)*S,gc.width,S);
+    for(let i=0;i<22;i++){ px(i*6,groundY-1,1,2,C.gr2); px(i*6+3,groundY-1,1,1,C.gr1); }
+    for(let i=0;i<15;i++){ const a=i%2; px(3+i*8,groundY+3,6,2,a?C.path:C.pathB); }
+    // side rose bushes
+    [[1,groundY-7],[6,groundY-5],[114,groundY-7],[119,groundY-5]].forEach(([rx,ry])=>{
+      px(rx+1,ry+4,1,3,C.stm); px(rx,ry+1,4,3,C.rDk); px(rx+1,ry,2,3,C.rB); px(rx+2,ry-1,1,2,C.rL);
+    });
+  }
+
+  // ── Boy ──────────────────────────────────────────────────
+  function drawBoy(bx, phase, f) {
+    const x = Math.round(bx);
+    const y = groundY - 42;
+    const wf = (phase==='walk') ? Math.floor(f/4)%4 : 0;
+    // leg/arm swing
+    const lL=[0,3,0,-2][wf], lR=[0,-2,0,3][wf];
+    const aL=[0,-2,0,2][wf], aR=[0,2,0,-2][wf];
+    const bob=(phase==='walk')?(Math.floor(f/4)%2?1:0):0;
+
+    // shadow
+    gx.globalAlpha=0.2; gx.fillStyle='#000';
+    gx.fillRect((x+2)*S,(groundY+1)*S,14*S,S); gx.globalAlpha=1;
+
+    // ── shoes ──
+    px(x+1,y+40,6,2,C.shoe); px(x+1,y+41,7,1,C.sole);
+    px(x+2,y+40,1,1,C.lace); px(x+4,y+40,1,1,C.lace);
+    px(x+9,y+40,6,2,C.shoe); px(x+9,y+41,7,1,C.sole);
+    px(x+10,y+40,1,1,C.lace); px(x+12,y+40,1,1,C.lace);
+
+    // ── pants (legs) ──
+    // left leg
+    px(x+2,y+23+lL+bob,4,17,C.pB);
+    px(x+2,y+23+lL+bob,1,17,C.pDk); px(x+5,y+23+lL+bob,1,17,C.pL);
+    px(x+2,y+31+lL+bob,4,3,C.pL); // knee
+    // right leg
+    px(x+10,y+23+lR+bob,4,17,C.pB);
+    px(x+13,y+23+lR+bob,1,17,C.pDk); px(x+10,y+23+lR+bob,1,17,C.pL);
+    px(x+10,y+31+lR+bob,4,3,C.pL);
+
+    // ── belt ──
+    px(x+2,y+22+bob,14,2,'#1c0f00');
+    px(x+7,y+22+bob,4,2,'#78340f'); px(x+8,y+22+bob,2,2,'#ca8a04'); // buckle
+
+    // ── shirt ──
+    px(x+2,y+9+bob,14,13,C.sB);
+    px(x+2,y+9+bob,2,13,C.sDk);   px(x+14,y+9+bob,2,13,C.sDk);
+    px(x+4,y+9+bob,10,4,C.sL);    // upper highlight
+    px(x+2,y+18+bob,14,4,C.sDk);  // lower shadow
+    // buttons
+    px(x+8,y+11+bob,2,1,C.sHL); px(x+8,y+14+bob,2,1,C.sHL); px(x+8,y+17+bob,2,1,C.sHL);
+    // collar
+    px(x+5,y+8+bob,8,2,C.sL);
+    px(x+7,y+7+bob,4,3,C.sL);
+    px(x+8,y+9+bob,2,4,C.dHL); // collar V opening
+
+    // ── arms ──
+    if(phase==='kiss'||phase==='heart'){
+      px(x+14,y+10+bob,5,4,C.sk2);
+      px(x+0,y+11+bob,3,9,C.sk2); px(x+0,y+11+bob,1,9,C.sk3);
+      px(x+14,y+10+bob,1,4,C.sk3);
+    } else if(phase==='offer'){
+      px(x+14,y+6+bob,3,8,C.sk2);   px(x+15,y+4+bob,2,5,C.sk2);
+      px(x+14,y+6+bob,1,8,C.sk3);
+      drawBouquet(x+15,y-5+bob);
+      px(x+0,y+11+bob,3,9,C.sk2);   px(x+0,y+11+bob,1,9,C.sk3);
+    } else {
+      px(x+0+aL,y+11+bob,3,9,C.sk2); px(x+0+aL,y+11+bob,1,9,C.sk3);
+      px(x+14+aR,y+11+bob,3,9,C.sk2); px(x+15+aR,y+11+bob,1,9,C.sk3);
+    }
+
+    // ── neck ──
+    px(x+7,y+5+bob,4,5,C.sk2);
+    px(x+7,y+5+bob,1,5,C.sk3); px(x+10,y+5+bob,1,5,C.sk1);
+
+    // ── head ──
+    px(x+4,y+0+bob,10,8,C.sk2);
+    px(x+4,y+0+bob,1,8,C.sk3);  px(x+13,y+0+bob,1,8,C.sk3);
+    px(x+6,y+0+bob,6,3,C.sk1);  // forehead highlight
+    px(x+5,y+7+bob,8,2,C.sk2);  // jaw
+    px(x+6,y+8+bob,6,1,C.sk3);  // chin
+
+    // ears
+    px(x+3,y+2+bob,2,4,C.sk2); px(x+3,y+3+bob,1,2,C.sk3); px(x+3,y+2+bob,1,1,C.sk1);
+    px(x+13,y+2+bob,2,4,C.sk2); px(x+14,y+3+bob,1,2,C.sk3); px(x+14,y+2+bob,1,1,C.sk1);
+
+    // ── hair ──
+    px(x+4,y+0+bob,10,2,C.hB);
+    px(x+3,y+2+bob,2,3,C.hB);  px(x+13,y+2+bob,2,3,C.hB); // sideburns
+    px(x+5,y+1+bob,8,1,C.hM);  px(x+7,y+0+bob,4,1,C.hH);  // highlight
+
+    // ── eyebrows ──
+    px(x+5,y+1+bob,4,1,C.hB); px(x+9,y+1+bob,4,1,C.hB);
+
+    // ── eyes ──
+    // left
+    px(x+5,y+2+bob,4,3,C.eyeW);
+    px(x+5,y+2+bob,1,3,C.sk3); px(x+8,y+2+bob,1,3,C.sk3);
+    px(x+6,y+3+bob,2,2,C.iris); px(x+6,y+3+bob,1,1,C.pupil);
+    px(x+7,y+2+bob,1,1,'#fff');
+    // right
+    px(x+10,y+2+bob,4,3,C.eyeW);
+    px(x+10,y+2+bob,1,3,C.sk3); px(x+13,y+2+bob,1,3,C.sk3);
+    px(x+11,y+3+bob,2,2,C.iris); px(x+11,y+3+bob,1,1,C.pupil);
+    px(x+12,y+2+bob,1,1,'#fff');
+
+    // ── nose ──
+    px(x+8,y+5+bob,2,1,C.sk3);
+    px(x+7,y+6+bob,1,1,C.sk3); px(x+10,y+6+bob,1,1,C.sk3);
+
+    // ── mouth ──
+    if(phase==='kiss'){
+      px(x+7,y+7+bob,4,1,C.lip);
+    } else {
+      px(x+7,y+7+bob,4,1,C.lip); px(x+8,y+7+bob,2,1,C.lipH);
+      px(x+6,y+8+bob,1,1,C.sk3); px(x+11,y+8+bob,1,1,C.sk3);
+    }
+  }
+
+  // ── Girl ─────────────────────────────────────────────────
+  function drawGirl(phase) {
+    const x = girlX;
+    const y = groundY - 44;
+    const happy = phase==='offer'||phase==='kiss'||phase==='heart';
+
+    // shadow
+    gx.globalAlpha=0.2; gx.fillStyle='#000';
+    gx.fillRect((x+1)*S,(groundY+1)*S,14*S,S); gx.globalAlpha=1;
+
+    // ── heels ──
+    px(x+2,y+42,3,2,C.dDk); px(x+4,y+43,5,1,C.dDk); px(x+2,y+43,1,1,C.dDk); // left
+    px(x+10,y+42,3,2,C.dDk); px(x+7,y+43,5,1,C.dDk); px(x+12,y+43,1,1,C.dDk); // right
+    px(x+2,y+41,5,1,C.dB); px(x+9,y+41,5,1,C.dB); // ankle strap
+
+    // ── bare legs ──
+    px(x+3,y+35,4,7,C.sk1); px(x+3,y+35,1,7,C.sk0); px(x+6,y+35,1,7,C.sk3);
+    px(x+10,y+35,4,7,C.sk1); px(x+10,y+35,1,7,C.sk0); px(x+13,y+35,1,7,C.sk3);
+    // knee detail
+    px(x+4,y+38,2,2,C.sk0); px(x+11,y+38,2,2,C.sk0);
+
+    // ── dress skirt (A-line) ──
+    px(x+0,y+22,16,13,C.dB);
+    px(x+0,y+22,16,3,C.dL);    // top shimmer
+    px(x-2,y+28,20,7,C.dB);
+    px(x-3,y+32,22,5,C.dB);    // max flare
+    px(x-1,y+28,1,9,C.dDk); px(x+16,y+28,1,9,C.dDk); // side shadows
+    // ruffle
+    px(x-2,y+31,20,1,C.dDk);
+    px(x-3,y+32,22,2,C.dHL);
+    px(x-2,y+34,20,1,C.dDk);
+    // shimmer lines
+    px(x+2,y+23,1,10,C.dHL); px(x+8,y+23,1,10,C.dHL); px(x+13,y+23,1,10,C.dHL);
+
+    // ── dress bodice ──
+    px(x+3,y+11,10,11,C.dB);
+    px(x+3,y+11,10,3,C.dL);   // shoulder highlight
+    px(x+3,y+18,10,4,C.dDk);  // waist shadow
+    px(x+5,y+11,6,5,C.dHL);   // sweetheart neckline center
+    px(x+4,y+13,1,3,C.dDk);   px(x+11,y+13,1,3,C.dDk); // neckline sides
+    // waist band
+    px(x+3,y+20,10,2,C.dDk);  px(x+4,y+20,8,1,C.dL);
+
+    // ── arms ──
+    if(phase==='kiss'){
+      px(x+1,y+12,3,8,C.sk2); px(x+1,y+12,1,8,C.sk3); px(x+1,y+12,1,1,C.sk1);
+      px(x+12,y+12,3,8,C.sk2); px(x+14,y+12,1,8,C.sk3);
+    } else if(phase==='heart'){
+      px(x-4,y+10,5,3,C.sk2);   px(x-4,y+10,1,3,C.sk3);
+      drawBouquet(x-9,y+2);
+      px(x+12,y+13,3,7,C.sk2);  px(x+14,y+13,1,7,C.sk3);
+    } else {
+      px(x+1,y+12,3,9,C.sk2);   px(x+1,y+12,1,9,C.sk3);   px(x+3,y+12,1,9,C.sk1);
+      px(x+12,y+12,3,9,C.sk2);  px(x+14,y+12,1,9,C.sk3);
+    }
+
+    // ── neck ──
+    px(x+6,y+7,4,5,C.sk2); px(x+6,y+7,1,5,C.sk3); px(x+9,y+7,1,5,C.sk1);
+
+    // ── head ──
+    px(x+3,y+0,10,10,C.sk2);
+    px(x+3,y+0,1,10,C.sk3); px(x+12,y+0,1,10,C.sk3);
+    px(x+5,y+0,6,4,C.sk1);  // forehead highlight
+    px(x+4,y+9,8,2,C.sk2);  // jaw
+    px(x+5,y+10,6,1,C.sk3); // chin
+
+    // ears with earrings
+    px(x+2,y+3,2,4,C.sk2); px(x+2,y+4,1,2,C.sk3);
+    px(x+1,y+6,2,3,C.dB);  px(x+2,y+8,1,1,C.dHL); // earring
+    px(x+12,y+3,2,4,C.sk2); px(x+13,y+4,1,2,C.sk3);
+    px(x+13,y+6,2,3,C.dB);  px(x+13,y+8,1,1,C.dHL);
+
+    // ── long dark hair ──
+    px(x+3,y+0,10,3,C.hB);          // top
+    px(x+1,y+2,3,16,C.hB);          // left flow
+    px(x+12,y+2,3,16,C.hB);         // right flow
+    px(x+1,y+17,3,5,C.hB);          // lower left
+    px(x+12,y+17,3,5,C.hB);         // lower right
+    px(x+2,y+6,1,10,C.hM);          // left strand highlight
+    px(x+13,y+6,1,10,C.hM);
+    px(x+5,y+0,2,4,C.hM);           // top center sheen
+    px(x+9,y+0,2,4,C.hM);
+    px(x+7,y+0,2,2,C.hH);           // specular shine
+    // rose hair clip
+    px(x+12,y+1,4,4,C.rDk);
+    px(x+13,y+0,3,3,C.rB); px(x+14,y+0,2,2,C.rL); px(x+15,y+0,1,1,'#fff');
+    px(x+12,y+4,1,1,C.stm); px(x+14,y+5,1,1,C.stm);
+
+    // ── eyebrows (arched) ──
+    px(x+5,y+2,1,1,C.hB); px(x+6,y+1,3,1,C.hB); px(x+9,y+2,1,1,C.hB);
+    px(x+9,y+2,1,1,C.hB); px(x+10,y+1,3,1,C.hB); px(x+13,y+2,1,1,C.hB);
+
+    // ── eyes (large + lashes) ──
+    // left
+    px(x+5,y+3,4,3,C.eyeW);
+    px(x+5,y+3,1,3,C.sk3); px(x+8,y+3,1,3,C.sk3);
+    px(x+6,y+4,2,2,C.iris); px(x+6,y+4,1,1,C.pupil);
+    px(x+7,y+3,1,1,'#fff');
+    // lashes left
+    px(x+5,y+2,4,1,C.hB);
+    px(x+4,y+3,1,1,C.hB); px(x+4,y+2,1,1,C.hB);
+    px(x+9,y+3,1,1,C.hB);
+    // right
+    px(x+9,y+3,4,3,C.eyeW);
+    px(x+9,y+3,1,3,C.sk3); px(x+12,y+3,1,3,C.sk3);
+    px(x+10,y+4,2,2,C.iris); px(x+10,y+4,1,1,C.pupil);
+    px(x+11,y+3,1,1,'#fff');
+    // lashes right
+    px(x+9,y+2,4,1,C.hB);
+    px(x+8,y+3,1,1,C.hB); px(x+8,y+2,1,1,C.hB);
+    px(x+13,y+3,1,1,C.hB);
+
+    // ── nose ──
+    px(x+7,y+6,2,1,C.sk3);
+    px(x+7,y+7,1,1,C.sk3); px(x+9,y+7,1,1,C.sk3);
+
+    // ── lips ──
+    if(happy){
+      px(x+6,y+8,5,1,C.lip); px(x+7,y+9,3,1,C.lip);
+      px(x+7,y+8,2,1,C.lipH);
+      px(x+6,y+9,1,1,C.sk3); px(x+11,y+9,1,1,C.sk3);
+      px(x+5,y+9,1,1,C.sk3); px(x+12,y+9,1,1,C.sk3);
+    } else {
+      px(x+6,y+8,5,2,C.lip); px(x+7,y+8,2,1,C.lipH);
+      px(x+6,y+9,1,1,C.sk3); px(x+11,y+9,1,1,C.sk3);
+    }
+  }
+
+  // ── Big pixel heart ───────────────────────────────────────
+  function drawBigHeart(cx,cy,sz,alpha){
+    gx.globalAlpha=Math.max(0,alpha);
+    const p=(dx,dy,c)=>{gx.fillStyle=c||C.heartR;gx.fillRect(cx+dx*sz,cy+dy*sz,sz,sz);};
+    p(1,0);p(2,0);p(4,0);p(5,0);
+    p(0,1);p(1,1);p(2,1);p(3,1);p(4,1);p(5,1);p(6,1);
+    p(0,2);p(1,2);p(2,2);p(3,2);p(4,2);p(5,2);p(6,2);
+    p(1,3);p(2,3);p(3,3);p(4,3);p(5,3);
+    p(2,4);p(3,4);p(4,4);p(3,5);
+    p(2,1,C.heartP);p(1,2,C.heartP);
+    gx.globalAlpha=1;
+  }
+
+  // ── Kiss sparkle ─────────────────────────────────────────
+  function drawSparkle(sx,sy){
+    [[0,-2],[0,2],[-2,0],[2,0],[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([dx,dy])=>{
+      px(sx+dx,sy+dy,1,1,'#fef9c3');
+    });
+    px(sx,sy,1,1,'#fff');
+  }
+
+  // ── State ────────────────────────────────────────────────
+  let mini=[], sparkleOn=false;
+  function spawnMini(){
+    for(let i=0;i<14;i++) mini.push({
+      x:(girlX+7)*S, y:(groundY-22)*S,
+      vx:(Math.random()-0.5)*3.5, vy:-(1+Math.random()*3),
+      life:60, sz:Math.random()<0.5?10:14,
+    });
+  }
+
+  let frame=0, boyX=4, miniSpawned=false, running=false;
+  const walkTarget = girlX - 18;
+
+  function loop(){
+    if(!running){ requestAnimationFrame(loop); return; }
+    const phase = frame<70?'walk': frame<120?'offer': frame<165?'kiss': frame<290?'heart':'done';
+
+    if(phase==='walk')  boyX = 4 + (walkTarget-4)*(frame/70);
+    if(phase==='kiss' && !miniSpawned){ miniSpawned=true; spawnMini(); sparkleOn=true; }
+    if(phase==='done'){ frame=0; boyX=4; miniSpawned=false; mini=[]; sparkleOn=false; }
+
+    gx.clearRect(0,0,gc.width,gc.height);
+    drawBg();
+    drawGirl(phase);
+    drawBoy(boyX, phase, frame);
+
+    if(sparkleOn && phase==='kiss') drawSparkle(Math.round(boyX)+14, groundY-26);
+
+    mini.forEach(h=>{
+      h.x+=h.vx; h.y+=h.vy*0.92; h.life--;
+      gx.globalAlpha=Math.max(0,h.life/60);
+      gx.font=`${h.sz}px serif`; gx.fillText('🌹',h.x,h.y);
+      gx.globalAlpha=1;
+    });
+    mini=mini.filter(h=>h.life>0);
+
+    if(phase==='heart'){
+      const t=frame-165;
+      const sz=Math.min(8,2+Math.floor(t/5));
+      const rise=t*0.65;
+      const alpha=t<90?1:Math.max(0,1-(t-90)/45);
+      drawBigHeart((girlX+2)*S-sz*3,(groundY-30)*S-rise,sz,alpha);
+    }
+
+    frame++;
+    requestAnimationFrame(loop);
+  }
+
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) running=true; });
+  },{threshold:0.4});
+  observer.observe(gc);
+  loop();
+})();
 
   const groundY = 46;  // 46*4=184px
   const girlX   = 92;  // 92*4=368px
