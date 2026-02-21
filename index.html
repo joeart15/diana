@@ -249,7 +249,7 @@
     <p class="label">🌹 just for you 🌹</p>
     <h1>Hey, <span>Diana Munoz</span> 🌸</h1>
     <p class="oneliner">
-      "Honestly I don't even know everything about you yet but what I do know already has me like... yeah, she's different. You're a 1 of 1 fr."
+      "I don't know everything about you yet — but what I do know already has me thinking you're something genuinely special."
     </p>
     <p class="from">Josue Arteaga 🤍</p>
   </div>
@@ -258,18 +258,16 @@
 
   <!-- Getting to know you -->
   <div class="forgive-section">
-    <h2>✨ Real talk</h2>
+    <h2>✨ Something I want you to know</h2>
     <p>
-      I saw you on Instagram and I was like okay I gotta say something.
-      Something about you just pulled me in and I'm glad it did.
-      Talking to you has been easy in the best way possible.
-      You make conversations feel natural, no awkwardness, no forced energy.
-      That's actually rare and I don't take that for granted.
-      I catch myself smiling on the phone because of your laugh and I'm not even
-      gonna pretend like I don't notice those lips either 😭.
-      I don't know everything about you yet and honestly that's the exciting part.
-      I genuinely want to get to know you and when the time comes I'm going to
-      show up and wow you. That's not a line, that's a plan. 😏
+      I saw you on Instagram and something about you just made me want to say something.
+      I'm glad I did. I know things between us haven't always been easy and I'm not
+      going to pretend otherwise. But through all of that I still find myself wanting
+      to get to know you more. Talking to you when it's good is genuinely one of
+      my favorite things. You're easy to talk to, you make me laugh, and your energy
+      is different from anyone else I've come across. I don't know everything about
+      you yet and honestly that's the part I'm looking forward to. I just want you
+      to know that I see you, I appreciate you, and I'm not going anywhere. 🤍
     </p>
   </div>
 
@@ -297,7 +295,7 @@
     <div class="card">
       <div class="emoji">🙏</div>
       <h3>She's a Godly woman</h3>
-      <p>That faith is not something you find everywhere. A woman who's grounded like that is special and it shows in how you carry yourself.</p>
+      <p>That faith is not something you find everywhere. A woman who's grounded like that is genuinely special and it shows in how you carry yourself.</p>
     </div>
     <div class="card">
       <div class="emoji">😂</div>
@@ -312,7 +310,7 @@
     <div class="card">
       <div class="emoji">🍹</div>
       <h3>She bartends too</h3>
-      <p>We literally live the same life and I respect it. You know how to handle a room, keep up with people and hold your own. That's attractive fr.</p>
+      <p>We literally do the same thing for a living and I respect it. You know how to handle a room, keep up with people and hold your own. That's something I genuinely admire.</p>
     </div>
     <div class="card">
       <div class="emoji">🎯</div>
@@ -322,7 +320,7 @@
     <div class="card">
       <div class="emoji">🌹</div>
       <h3>She deserves flowers</h3>
-      <p>A girl who loves her flowers and wants her princess treatment. Say less. I see you and I'm taking notes. 🌹🌹🌹</p>
+      <p>A girl who appreciates the princess treatment — I see you and I'm taking notes. When the time is right, I've got you. 🌹</p>
     </div>
   </div>
 
@@ -686,14 +684,15 @@
     });
   }
 
-  // phases: 0-110 walk | 110-180 offer | 180-240 kiss | 240-400 heart | 400-440 pause
-  let frame=0, boyX=4, miniSpawned=false;
+  // phases: 0-70 walk | 70-120 offer | 120-165 kiss | 165-290 heart | 290-320 pause → loop
+  let frame=0, boyX=4, miniSpawned=false, running=false;
   const walkTarget = girlX - 16;
 
   function loop() {
-    const phase = frame<110?'walk': frame<180?'offer': frame<240?'kiss': frame<410?'heart':'done';
+    if(!running){ requestAnimationFrame(loop); return; }
+    const phase = frame<70?'walk': frame<120?'offer': frame<165?'kiss': frame<295?'heart':'done';
 
-    if(phase==='walk')  boyX = 4 + (walkTarget-4)*(frame/110);
+    if(phase==='walk')  boyX = 4 + (walkTarget-4)*(frame/70);
     if(phase==='kiss' && !miniSpawned){ miniSpawned=true; spawnMini(); sparkleOn=true; }
     if(phase==='done'){ frame=0; boyX=4; miniSpawned=false; mini=[]; sparkleOn=false; }
 
@@ -719,10 +718,10 @@
 
     // big rising heart
     if(phase==='heart'){
-      const t=frame-240;
-      const sz = Math.min(8, 2+Math.floor(t/8));
-      const rise = t*0.5;
-      const alpha = t<120 ? 1 : Math.max(0, 1-(t-120)/50);
+      const t=frame-165;
+      const sz = Math.min(8, 2+Math.floor(t/5));
+      const rise = t*0.7;
+      const alpha = t<80 ? 1 : Math.max(0, 1-(t-80)/45);
       const hx = (girlX+3)*S - sz*3;
       const hy = (groundY-28)*S - rise;
       drawBigHeart(hx, hy, sz, alpha);
@@ -731,6 +730,13 @@
     frame++;
     requestAnimationFrame(loop);
   }
+
+  // only start when scrolled into view
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) running = true; });
+  }, { threshold: 0.4 });
+  observer.observe(gc);
+
   loop();
 })();
 </script>
