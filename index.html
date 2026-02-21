@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For Diana 💗</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ffe0ec 0%, #ffd6e7 40%, #fce4f3 100%);
+      font-family: 'Lato', sans-serif;
+      overflow-x: hidden;
+      color: #7a3b5e;
+    }
+
+    /* ── Falling hearts & sparkles canvas ── */
+    #canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Main layout ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 20px 60px;
+      gap: 50px;
+    }
+
+    /* ── Hero card ── */
+    .hero {
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,182,209,0.6);
+      border-radius: 30px;
+      padding: 50px 45px;
+      max-width: 680px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(220,80,130,0.15);
+      animation: floatIn 1.1s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    @keyframes floatIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero .label {
+      font-size: 0.78rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #e07aa0;
+      margin-bottom: 14px;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 6vw, 3.4rem);
+      line-height: 1.15;
+      color: #c2185b;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 span { font-style: italic; }
+
+    .hero .oneliner {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.05rem, 2.8vw, 1.3rem);
+      line-height: 1.7;
+      color: #9c4070;
+      margin-bottom: 28px;
+      padding: 0 10px;
+    }
+
+    .hero .from {
+      font-size: 0.88rem;
+      letter-spacing: 2px;
+      color: #e07aa0;
+    }
+
+    /* ── Reason cards ── */
+    .reasons-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: #c2185b;
+      text-align: center;
+      animation: floatIn 1.1s 0.2s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      max-width: 780px;
+      width: 100%;
+      animation: floatIn 1.1s 0.35s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,182,209,0.5);
+      border-radius: 22px;
+      padding: 28px 22px;
+      text-align: center;
+      transition: transform 0.25s, box-shadow 0.25s;
+      box-shadow: 0 4px 20px rgba(220,80,130,0.1);
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(220,80,130,0.2);
+    }
+
+    .card .emoji { font-size: 2.2rem; margin-bottom: 12px; }
+
+    .card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      color: #c2185b;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #9c4070;
+    }
+
+    /* ── Footer ── */
+    footer {
+      font-size: 0.8rem;
+      color: #e07aa0;
+      letter-spacing: 1.5px;
+      animation: floatIn 1.1s 0.5s cubic-bezier(.22,1,.36,1) both;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div class="page">
+
+  <!-- Hero -->
+  <div class="hero">
+    <p class="label">just for you 💗</p>
+    <h1>Hey, <span>Diana Munoz</span> 🌸</h1>
+    <p class="oneliner">
+      "In a world full of ordinary moments, you somehow make every single one feel like something worth remembering."
+    </p>
+    <p class="from">— with love, Josue Arteaga 🤍</p>
+  </div>
+
+  <!-- Reason section -->
+  <h2 class="reasons-title">A few reasons you're so special ✨</h2>
+
+  <div class="cards">
+    <div class="card">
+      <div class="emoji">🌟</div>
+      <h3>Your energy</h3>
+      <p>The way you light up a room without even trying — that's a rare kind of magic.</p>
+    </div>
+    <div class="card">
+      <div class="emoji">💬</div>
+      <h3>Your mind</h3>
+      <p>Talking to you never gets old. You say things that stay with me longer than you know.</p>
+    </div>
+    <div class="card">
+      <div class="emoji">🌸</div>
+      <h3>Your heart</h3>
+      <p>The way you care about things — genuinely, deeply — is one of the most beautiful things about you.</p>
+    </div>
+    <div class="card">
+      <div class="emoji">😂</div>
+      <h3>Your laugh</h3>
+      <p>Honestly? Your laugh is contagious and I think about it more than I probably should.</p>
+    </div>
+    <div class="card">
+      <div class="emoji">💫</div>
+      <h3>Just… you</h3>
+      <p>There's no one else quite like you, Diana. And that's the best thing I could say about anyone.</p>
+    </div>
+    <div class="card">
+      <div class="emoji">🎀</div>
+      <h3>Your presence</h3>
+      <p>Even on a bad day, knowing you exist somehow makes everything feel a little better.</p>
+    </div>
+  </div>
+
+  <footer>made with 💗 by Josue, just for Diana</footer>
+</div>
+
+<!-- Falling hearts & sparkles -->
+<script>
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const symbols = ['💗','💖','✨','💕','🌸','⭐','💫','🩷'];
+
+  function spawn() {
+    return {
+      x: Math.random() * W,
+      y: -30,
+      sym: symbols[Math.floor(Math.random() * symbols.length)],
+      size: 14 + Math.random() * 18,
+      speed: 0.8 + Math.random() * 1.4,
+      drift: (Math.random() - 0.5) * 0.6,
+      opacity: 0.55 + Math.random() * 0.45,
+      rot: (Math.random() - 0.5) * 0.06,
+      angle: 0,
+    };
+  }
+
+  for (let i = 0; i < 28; i++) {
+    const p = spawn();
+    p.y = Math.random() * H;
+    particles.push(p);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    for (const p of particles) {
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      ctx.font = `${p.size}px serif`;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle);
+      ctx.fillText(p.sym, 0, 0);
+      ctx.restore();
+
+      p.y     += p.speed;
+      p.x     += p.drift;
+      p.angle += p.rot;
+
+      if (p.y > H + 30) Object.assign(p, spawn());
+    }
+
+    // trickle in new ones
+    if (Math.random() < 0.04) particles.push(spawn());
+    if (particles.length > 60) particles.splice(0, 1);
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+</script>
+
+</body>
+</html>
